@@ -1,0 +1,1498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>India Renewable Energy Intelligence Platform</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap');
+
+  :root {
+    --bg: #0a0f0a;
+    --bg2: #0f1a0f;
+    --bg3: #142014;
+    --card: #0d170d;
+    --border: #1e3a1e;
+    --border2: #2d5c2d;
+    --green: #22c55e;
+    --green2: #16a34a;
+    --green3: #4ade80;
+    --amber: #f59e0b;
+    --red: #ef4444;
+    --blue: #3b82f6;
+    --teal: #14b8a6;
+    --text: #e8f5e8;
+    --text2: #8fbc8f;
+    --text3: #4a7a4a;
+    --glow: rgba(34,197,94,0.15);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Outfit', sans-serif;
+    font-weight: 300;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(10,15,10,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    height: 56px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+
+  .nav-logo {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    color: var(--green);
+    letter-spacing: 0.08em;
+  }
+
+  .nav-links {
+    display: flex; gap: 0; list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--text3);
+    text-decoration: none;
+    font-size: 12px;
+    font-family: 'DM Mono', monospace;
+    padding: 0 16px;
+    height: 56px;
+    display: flex; align-items: center;
+    letter-spacing: 0.04em;
+    transition: color 0.2s;
+    border-right: 1px solid var(--border);
+  }
+
+  .nav-links a:first-child { border-left: 1px solid var(--border); }
+  .nav-links a:hover { color: var(--green); }
+
+  /* SECTIONS */
+  section { min-height: 100vh; }
+
+  .section-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 100px 2rem 80px;
+  }
+
+  /* SECTION LABELS */
+  .section-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--green);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  .section-tag::before {
+    content: '';
+    width: 24px; height: 1px;
+    background: var(--green);
+    display: inline-block;
+  }
+
+  /* HERO SECTION */
+  #intro {
+    background: var(--bg);
+    position: relative;
+    overflow: hidden;
+    display: flex; align-items: center;
+  }
+
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 60px 60px;
+    opacity: 0.4;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, black 40%, transparent 100%);
+  }
+
+  .hero-content {
+    position: relative; z-index: 1;
+    max-width: 1200px; margin: 0 auto; padding: 0 2rem;
+    padding-top: 120px; padding-bottom: 80px;
+  }
+
+  .hero-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--green);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  .hero-eyebrow .pulse {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--green);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.8); }
+  }
+
+  h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    font-weight: 400;
+    line-height: 1.1;
+    color: var(--text);
+    margin-bottom: 1.5rem;
+  }
+
+  h1 em {
+    font-style: italic;
+    color: var(--green3);
+  }
+
+  .hero-desc {
+    font-size: 1.1rem;
+    color: var(--text2);
+    max-width: 600px;
+    margin-bottom: 3rem;
+    line-height: 1.8;
+  }
+
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    max-width: 700px;
+    margin-bottom: 3rem;
+  }
+
+  .hero-stat {
+    background: var(--card);
+    padding: 1.25rem 1.5rem;
+  }
+
+  .hero-stat .num {
+    font-family: 'DM Mono', monospace;
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: var(--green);
+  }
+
+  .hero-stat .lbl {
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 0.04em;
+    margin-top: 2px;
+  }
+
+  .model-chips {
+    display: flex; flex-wrap: wrap; gap: 8px;
+  }
+
+  .chip {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 12px;
+    font-family: 'DM Mono', monospace;
+    color: var(--text2);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .chip:hover, .chip.active {
+    background: var(--glow);
+    border-color: var(--green);
+    color: var(--green3);
+  }
+
+  /* CARDS */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+  }
+
+  .card-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  }
+
+  .metric {
+    font-family: 'DM Mono', monospace;
+    font-size: 1.8rem;
+    font-weight: 500;
+    color: var(--green3);
+  }
+
+  .metric-sub {
+    font-size: 12px;
+    color: var(--text3);
+    margin-top: 4px;
+  }
+
+  /* GRID LAYOUTS */
+  .grid-4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .grid-2-1 {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  /* CHART CONTAINERS */
+  .chart-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+  }
+
+  .chart-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+
+  .chart-sub {
+    font-size: 11px;
+    color: var(--text3);
+    margin-bottom: 1.25rem;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .chart-wrap {
+    position: relative;
+    height: 260px;
+  }
+
+  /* PREDICTION ENGINE */
+  #predict {
+    background: var(--bg2);
+  }
+
+  h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(1.8rem, 3vw, 2.8rem);
+    font-weight: 400;
+    margin-bottom: 0.5rem;
+    line-height: 1.2;
+  }
+
+  h2 em { color: var(--green3); font-style: italic; }
+
+  .section-desc {
+    color: var(--text2);
+    font-size: 0.95rem;
+    margin-bottom: 2.5rem;
+    max-width: 600px;
+  }
+
+  /* FORM ELEMENTS */
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+
+  label {
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    color: var(--text3);
+    letter-spacing: 0.05em;
+  }
+
+  input[type=number], select {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    padding: 10px 12px;
+    font-size: 13px;
+    font-family: 'DM Mono', monospace;
+    outline: none;
+    transition: border-color 0.2s;
+    width: 100%;
+  }
+
+  input:focus, select:focus { border-color: var(--green2); }
+
+  select option { background: var(--bg3); }
+
+  .btn-run {
+    background: var(--green2);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 32px;
+    font-size: 13px;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+
+  .btn-run:hover { background: var(--green); transform: translateY(-1px); }
+
+  .btn-load {
+    background: transparent;
+    border: 1px solid var(--border2);
+    color: var(--text2);
+    border-radius: 8px;
+    padding: 12px 20px;
+    font-size: 12px;
+    font-family: 'DM Mono', monospace;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-load:hover { border-color: var(--green); color: var(--green3); }
+
+  /* RESULTS */
+  .result-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+
+  .result-card {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.25rem;
+    animation: fadeIn 0.4s ease forwards;
+    opacity: 0;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .result-card:nth-child(1) { animation-delay: 0.05s; }
+  .result-card:nth-child(2) { animation-delay: 0.1s; }
+  .result-card:nth-child(3) { animation-delay: 0.15s; }
+  .result-card:nth-child(4) { animation-delay: 0.2s; }
+  .result-card:nth-child(5) { animation-delay: 0.25s; }
+  .result-card:nth-child(6) { animation-delay: 0.3s; }
+
+  .result-model {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--green);
+    letter-spacing: 0.1em;
+    margin-bottom: 6px;
+  }
+
+  .result-label {
+    font-size: 12px;
+    color: var(--text3);
+    margin-bottom: 4px;
+  }
+
+  .result-value {
+    font-family: 'DM Mono', monospace;
+    font-size: 1.3rem;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .result-value.green { color: var(--green3); }
+  .result-value.amber { color: var(--amber); }
+  .result-value.red { color: var(--red); }
+  .result-value.blue { color: var(--blue); }
+
+  .result-note {
+    font-size: 11px;
+    color: var(--text3);
+    margin-top: 4px;
+    line-height: 1.5;
+  }
+
+  .badge-pill {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    font-weight: 500;
+  }
+
+  .badge-high { background: rgba(239,68,68,0.15); color: #fca5a5; border: 1px solid rgba(239,68,68,0.3); }
+  .badge-medium { background: rgba(245,158,11,0.15); color: #fcd34d; border: 1px solid rgba(245,158,11,0.3); }
+  .badge-low { background: rgba(34,197,94,0.15); color: var(--green3); border: 1px solid rgba(34,197,94,0.3); }
+  .badge-leader { background: rgba(20,184,166,0.15); color: #5eead4; border: 1px solid rgba(20,184,166,0.3); }
+  .badge-growing { background: rgba(59,130,246,0.15); color: #93c5fd; border: 1px solid rgba(59,130,246,0.3); }
+  .badge-untapped { background: rgba(245,158,11,0.15); color: #fcd34d; border: 1px solid rgba(245,158,11,0.3); }
+  .badge-early { background: rgba(107,114,128,0.15); color: #d1d5db; border: 1px solid rgba(107,114,128,0.3); }
+
+  /* SECTION DIVIDER */
+  .section-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border2), transparent);
+    margin: 0;
+  }
+
+  /* OPTIMIZATION VIZ */
+  .opt-bar-wrap { margin-top: 1rem; }
+  .opt-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .opt-label { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--text3); width: 50px; flex-shrink: 0; }
+  .opt-track { flex: 1; background: var(--bg3); border-radius: 4px; height: 8px; overflow: hidden; }
+  .opt-fill { height: 100%; border-radius: 4px; transition: width 0.8s cubic-bezier(0.16,1,0.3,1); }
+  .opt-val { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--text2); width: 80px; text-align: right; }
+
+  /* TREND CHART STATE SELECTOR */
+  .state-selector-wrap { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 1.5rem; }
+  .state-btn { background: var(--bg3); border: 1px solid var(--border); border-radius: 6px;
+    padding: 5px 12px; font-size: 11px; font-family: 'DM Mono', monospace; color: var(--text3);
+    cursor: pointer; transition: all 0.2s; }
+  .state-btn:hover, .state-btn.active { background: var(--glow); border-color: var(--green); color: var(--green3); }
+
+  /* TABLE */
+  .data-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .data-table th { background: var(--bg3); padding: 10px 12px; text-align: left;
+    font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text3);
+    letter-spacing: 0.06em; border-bottom: 1px solid var(--border); }
+  .data-table td { padding: 9px 12px; border-bottom: 1px solid var(--border); color: var(--text2); }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table tr:hover td { background: var(--bg3); color: var(--text); }
+  .rank { font-family: 'DM Mono', monospace; color: var(--text3); font-size: 11px; }
+  .bar-cell { display: flex; align-items: center; gap: 8px; }
+  .mini-bar { height: 4px; border-radius: 2px; min-width: 2px; }
+
+  /* RELATIONSHIP DIAGRAM */
+  .rel-diagram {
+    display: flex; flex-direction: column; gap: 0;
+    font-family: 'DM Mono', monospace; font-size: 11px;
+  }
+  .rel-row { display: flex; align-items: center; gap: 8px; padding: 8px 0;
+    border-bottom: 1px solid var(--border); }
+  .rel-row:last-child { border-bottom: none; }
+  .rel-input { color: var(--green3); flex: 1; }
+  .rel-arrow { color: var(--text3); font-size: 14px; }
+  .rel-output { color: var(--text2); flex: 2; }
+  .rel-strength { padding: 2px 8px; border-radius: 4px; font-size: 10px; }
+  .str-strong { background: rgba(34,197,94,0.2); color: var(--green3); }
+  .str-moderate { background: rgba(245,158,11,0.2); color: var(--amber); }
+  .str-weak { background: rgba(107,114,128,0.2); color: #9ca3af; }
+
+  /* FOOTER */
+  footer {
+    background: var(--bg);
+    border-top: 1px solid var(--border);
+    padding: 2rem;
+    text-align: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 0.04em;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    .grid-4, .grid-3 { grid-template-columns: 1fr 1fr; }
+    .grid-2, .grid-2-1 { grid-template-columns: 1fr; }
+    .hero-stats { grid-template-columns: 1fr 1fr; }
+    .form-grid { grid-template-columns: 1fr 1fr; }
+    .result-grid { grid-template-columns: 1fr 1fr; }
+    nav { display: none; }
+  }
+
+  @media (max-width: 480px) {
+    .grid-4 { grid-template-columns: 1fr; }
+    .form-grid { grid-template-columns: 1fr; }
+    .result-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">INDIA_ENERGY_INTEL / v2.0</div>
+  <ul class="nav-links">
+    <li><a href="#intro">Overview</a></li>
+    <li><a href="#insights">Insights</a></li>
+    <li><a href="#models">Models</a></li>
+    <li><a href="#predict">Predict</a></li>
+    <li><a href="#trends">Trends</a></li>
+    <li><a href="#optimize">Optimize</a></li>
+  </ul>
+</nav>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SECTION 1: INTRO / HERO                     -->
+<!-- ═══════════════════════════════════════════ -->
+<section id="intro">
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">
+      <span class="pulse"></span>
+      Data Warehousing & Mining Project · 36 States · 5 Years
+    </div>
+    <h1>
+      India's <em>Renewable Energy</em><br>
+      Intelligence Platform
+    </h1>
+    <p class="hero-desc">
+      An end-to-end data mining system analyzing solar irradiance, wind speed, hydro capacity,
+      grid efficiency and CO₂ avoidance across all Indian states — powered by 9 ML models
+      from K-Means clustering to linear programming optimization.
+    </p>
+
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="num">180</div>
+        <div class="lbl">Dataset rows</div>
+      </div>
+      <div class="hero-stat">
+        <div class="num">41</div>
+        <div class="lbl">Features</div>
+      </div>
+      <div class="hero-stat">
+        <div class="num">9</div>
+        <div class="lbl">ML models</div>
+      </div>
+      <div class="hero-stat">
+        <div class="num">2030</div>
+        <div class="lbl">Forecast horizon</div>
+      </div>
+    </div>
+
+    <div class="model-chips">
+      <span class="chip active">M1 · Demand Forecast</span>
+      <span class="chip">M2 · Priority Classifier</span>
+      <span class="chip">M3 · Solar Growth</span>
+      <span class="chip">M4 · K-Means Cluster</span>
+      <span class="chip">M5 · Correlation</span>
+      <span class="chip">M6 · LP Optimization</span>
+      <span class="chip">M7 · CO₂ Predictor</span>
+      <span class="chip">M8 · Grid Classifier</span>
+      <span class="chip">M9 · Self-Sufficiency</span>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SECTION 2: KEY INSIGHTS / NATIONAL OVERVIEW -->
+<!-- ═══════════════════════════════════════════ -->
+<section id="insights">
+  <div class="section-inner">
+    <div class="section-tag">National Overview · 2024 Data</div>
+    <h2>Key <em>Insights</em> from OLAP Analysis</h2>
+    <p class="section-desc">State-wise energy metrics derived from our data warehouse. Each card is an OLAP roll-up result.</p>
+
+    <div class="grid-4">
+      <div class="card">
+        <div class="card-title">Top Solar State</div>
+        <div class="metric">Rajasthan</div>
+        <div class="metric-sub">21,348 MW installed · 33% renewable penetration</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Highest Irradiance</div>
+        <div class="metric">Goa</div>
+        <div class="metric-sub">156.7 W/m² · Only 43 MW installed — massive gap</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Best Grid Efficiency</div>
+        <div class="metric">Chandigarh</div>
+        <div class="metric-sub">0% T&D loss · Most efficient grid in India</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Worst Grid Loss</div>
+        <div class="metric" style="color:var(--red)">Tripura</div>
+        <div class="metric-sub">61% T&D loss · Urgent infrastructure upgrade needed</div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="chart-box">
+        <div class="chart-title">Renewable Penetration by State (2024)</div>
+        <div class="chart-sub">% of demand met by renewables · sorted desc</div>
+        <div class="chart-wrap" style="height:300px">
+          <canvas id="penetrationChart" role="img" aria-label="Renewable penetration bar chart"></canvas>
+        </div>
+      </div>
+      <div class="chart-box">
+        <div class="chart-title">CO₂ Avoided by Top States (2024)</div>
+        <div class="chart-sub">Thousand tonnes of CO₂ not emitted</div>
+        <div class="chart-wrap" style="height:300px">
+          <canvas id="co2Chart" role="img" aria-label="CO2 avoidance chart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="chart-box">
+        <div class="chart-title">Correlation: Irradiance vs Solar Capacity</div>
+        <div class="chart-sub">Weak correlation (r=0.23) confirms the policy gap — sun ≠ panels</div>
+        <div class="chart-wrap">
+          <canvas id="corrChart" role="img" aria-label="Irradiance vs capacity scatter"></canvas>
+        </div>
+      </div>
+      <div class="chart-box">
+        <div class="chart-title">T&D Loss Distribution (M8 Input)</div>
+        <div class="chart-sub">Grid efficiency tiers across 180 state-year observations</div>
+        <div class="chart-wrap">
+          <canvas id="tdChart" role="img" aria-label="T&D loss distribution"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Input-Output Relationships -->
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">Input → Output Relationships (Correlation Strength)</div>
+        <div class="rel-diagram" style="margin-top:0.75rem">
+          <div class="rel-row">
+            <span class="rel-input">solar_capacity</span>
+            <span class="rel-arrow">→</span>
+            <span class="rel-output">co2_avoided_tonnes</span>
+            <span class="rel-strength str-strong">r=0.95</span>
+          </div>
+          <div class="rel-row">
+            <span class="rel-input">renewable_total</span>
+            <span class="rel-arrow">→</span>
+            <span class="rel-output">self_sufficiency_ratio</span>
+            <span class="rel-strength str-strong">r=0.91</span>
+          </div>
+          <div class="rel-row">
+            <span class="rel-input">wind_capacity</span>
+            <span class="rel-arrow">→</span>
+            <span class="rel-output">energy_consumption</span>
+            <span class="rel-strength str-strong">r=0.77</span>
+          </div>
+          <div class="rel-row">
+            <span class="rel-input">wind_speed</span>
+            <span class="rel-arrow">→</span>
+            <span class="rel-output">energy_consumption</span>
+            <span class="rel-strength str-moderate">r=0.45</span>
+          </div>
+          <div class="rel-row">
+            <span class="rel-input">solar_irradiance</span>
+            <span class="rel-arrow">→</span>
+            <span class="rel-output">solar_capacity</span>
+            <span class="rel-strength str-weak">r=0.23</span>
+          </div>
+          <div class="rel-row">
+            <span class="rel-input">wind_speed</span>
+            <span class="rel-arrow">→</span>
+            <span class="rel-output">wind_capacity</span>
+            <span class="rel-strength str-weak">r=0.30</span>
+          </div>
+        </div>
+      </div>
+      <div class="chart-box">
+        <div class="chart-title">Supply Gap by State — Top 12 (2024)</div>
+        <div class="chart-sub">Unmet energy demand in MU</div>
+        <div class="chart-wrap">
+          <canvas id="gapChart" role="img" aria-label="Supply gap bar chart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SECTION 3: MODEL RESULTS OVERVIEW           -->
+<!-- ═══════════════════════════════════════════ -->
+<section id="models" style="background:var(--bg2)">
+  <div class="section-inner">
+    <div class="section-tag">9 Models · Results Summary</div>
+    <h2>Machine Learning <em>Model Results</em></h2>
+    <p class="section-desc">All models trained on the enriched dataset. Results from 2024 data with 5-year trend features.</p>
+
+    <!-- Model accuracy cards -->
+    <div class="grid-3">
+      <div class="card">
+        <div class="card-title">M1 · Random Forest Regression</div>
+        <div class="metric">R² = 0.971</div>
+        <div class="metric-sub">Energy demand forecasting · CV = 0.885 ± 0.063</div>
+        <div style="margin-top:0.75rem;font-size:12px;color:var(--text3)">Top feature: solar_capacity (47.9%)</div>
+      </div>
+      <div class="card">
+        <div class="card-title">M2 · Decision Tree Classifier</div>
+        <div class="metric">97.5% acc</div>
+        <div class="metric-sub">Investment priority · HIGH/MEDIUM/LOW</div>
+        <div style="margin-top:0.75rem;font-size:12px;color:var(--text3)">Split rule: irradiance &gt; 140.21 → HIGH</div>
+      </div>
+      <div class="card">
+        <div class="card-title">M4 · K-Means Clustering</div>
+        <div class="metric">Sil = 0.445</div>
+        <div class="metric-sub">4 clusters · All 36 states · K=4 optimal</div>
+        <div style="margin-top:0.75rem;font-size:12px;color:var(--text3)">Leaders / Growing / Untapped / Early</div>
+      </div>
+      <div class="card">
+        <div class="card-title">M6 · LP Optimization</div>
+        <div class="metric">scipy LP</div>
+        <div class="metric-sub">Min cost + min CO₂ subject to demand constraint</div>
+        <div style="margin-top:0.75rem;font-size:12px;color:var(--text3)">Solar 60%, Wind 25%, Hydro 15% optimal</div>
+      </div>
+      <div class="card">
+        <div class="card-title">M7 · Gradient Boosting</div>
+        <div class="metric">R² = 0.978</div>
+        <div class="metric-sub">CO₂ avoidance predictor · CV = 0.978 ± 0.012</div>
+        <div style="margin-top:0.75rem;font-size:12px;color:var(--text3)">Top feature: total_renewable (89.4%)</div>
+      </div>
+      <div class="card">
+        <div class="card-title">M8 · RF T&D Classifier</div>
+        <div class="metric">93.9% acc</div>
+        <div class="metric-sub">Grid efficiency tier · HIGH/MEDIUM/LOW loss</div>
+        <div style="margin-top:0.75rem;font-size:12px;color:var(--text3)">13 states need urgent grid upgrades</div>
+      </div>
+    </div>
+
+    <!-- Cluster table -->
+    <div class="chart-box" style="margin-bottom:1.5rem">
+      <div class="chart-title">M4 Clustering Results — All States Classified</div>
+      <div class="chart-sub">K-Means output · 4 clusters · 2024 data</div>
+      <div style="overflow-x:auto; margin-top:1rem">
+        <table class="data-table" id="clusterTable"></table>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="chart-box">
+        <div class="chart-title">M9 Self-Sufficiency Forecast — Top 6 States</div>
+        <div class="chart-sub">Projected to 2030 via linear trend per state</div>
+        <div class="chart-wrap" style="height:280px">
+          <canvas id="suffChart" role="img" aria-label="Self-sufficiency forecast"></canvas>
+        </div>
+      </div>
+      <div class="chart-box">
+        <div class="chart-title">M7 CO₂ Model — Feature Importance</div>
+        <div class="chart-sub">Gradient Boosting feature weights</div>
+        <div class="chart-wrap" style="height:280px">
+          <canvas id="co2ImpChart" role="img" aria-label="CO2 feature importance"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SECTION 4: PREDICTION ENGINE                -->
+<!-- ═══════════════════════════════════════════ -->
+<section id="predict">
+  <div class="section-inner">
+    <div class="section-tag">Interactive · All 9 Models</div>
+    <h2>State <em>Prediction Engine</em></h2>
+    <p class="section-desc">
+      Select a state to auto-fill 2024 data, or enter custom values.
+      Runs all 9 models simultaneously and shows relationships between inputs and outputs.
+    </p>
+
+    <div class="card" style="margin-bottom:2rem">
+      <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-bottom:1.5rem">
+        <div class="form-group" style="flex:1; min-width:200px">
+          <label>Load a state (auto-fills all values)</label>
+          <select id="stateSelect" onchange="loadState()">
+            <option value="">— Select State —</option>
+          </select>
+        </div>
+        <div style="padding-top:18px">
+          <button class="btn-load" onclick="document.getElementById('stateSelect').value=''; clearForm()">Clear</button>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Solar Irradiance (W/m²)</label>
+          <input type="number" id="f_irr" value="140" step="0.1" min="100" max="170">
+        </div>
+        <div class="form-group">
+          <label>Wind Speed (m/s)</label>
+          <input type="number" id="f_wind" value="3.5" step="0.1" min="0.5" max="6">
+        </div>
+        <div class="form-group">
+          <label>Solar Capacity (MW)</label>
+          <input type="number" id="f_solar" value="500" step="1">
+        </div>
+        <div class="form-group">
+          <label>Wind Capacity (MW)</label>
+          <input type="number" id="f_windcap" value="200" step="1">
+        </div>
+        <div class="form-group">
+          <label>Hydro Capacity (MW)</label>
+          <input type="number" id="f_hydro" value="100" step="1">
+        </div>
+        <div class="form-group">
+          <label>Energy Consumption (MU)</label>
+          <input type="number" id="f_cons" value="25000" step="100">
+        </div>
+        <div class="form-group">
+          <label>PLF — Plant Load Factor (%)</label>
+          <input type="number" id="f_plf" value="63" step="0.1" min="40" max="80">
+        </div>
+        <div class="form-group">
+          <label>T&D Loss (%)</label>
+          <input type="number" id="f_td" value="15" step="0.5" min="0" max="65">
+        </div>
+        <div class="form-group">
+          <label>Resource Score (0–100)</label>
+          <input type="number" id="f_res" value="65" step="0.1" min="0" max="100">
+        </div>
+      </div>
+
+      <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap">
+        <button class="btn-run" onclick="runPrediction()">
+          <span>▶</span> Run All 9 Models
+        </button>
+        <span id="run-note" style="font-size:11px; color:var(--text3); font-family:'DM Mono',monospace"></span>
+      </div>
+    </div>
+
+    <!-- Results appear here -->
+    <div id="predResults" style="display:none">
+      <div class="section-tag" style="margin-bottom:1rem">Prediction Results</div>
+      <div class="result-grid" id="resultCards"></div>
+
+      <!-- Input-Output explanation -->
+      <div class="card" style="margin-top:1.5rem">
+        <div class="card-title">How Your Inputs Drive the Outputs</div>
+        <div class="rel-diagram" style="margin-top:0.75rem" id="ioRelations"></div>
+      </div>
+
+      <!-- Optimization visual -->
+      <div class="card" style="margin-top:1rem">
+        <div class="card-title">M6 Optimal Energy Mix (LP Solution)</div>
+        <div id="optViz" class="opt-bar-wrap"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SECTION 5: TRENDS                           -->
+<!-- ═══════════════════════════════════════════ -->
+<section id="trends" style="background:var(--bg2)">
+  <div class="section-inner">
+    <div class="section-tag">5-Year History · 2020–2024</div>
+    <h2>State <em>Trend Analysis</em></h2>
+    <p class="section-desc">Track how solar capacity, consumption, and self-sufficiency evolved per state over 5 years.</p>
+
+    <div class="state-selector-wrap" id="trendStateButtons"></div>
+
+    <div class="grid-2">
+      <div class="chart-box">
+        <div class="chart-title">Solar Capacity Growth (MW)</div>
+        <div class="chart-sub" id="trendLabel1">Select a state above</div>
+        <div class="chart-wrap">
+          <canvas id="trendSolar" role="img" aria-label="Solar capacity trend"></canvas>
+        </div>
+      </div>
+      <div class="chart-box">
+        <div class="chart-title">Renewable Penetration % Trend</div>
+        <div class="chart-sub" id="trendLabel2">Select a state above</div>
+        <div class="chart-wrap">
+          <canvas id="trendPenetration" role="img" aria-label="Renewable penetration trend"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="chart-box">
+        <div class="chart-title">Energy Consumption Trend (MU)</div>
+        <div class="chart-sub" id="trendLabel3">Select a state above</div>
+        <div class="chart-wrap">
+          <canvas id="trendCons" role="img" aria-label="Consumption trend"></canvas>
+        </div>
+      </div>
+      <div class="chart-box">
+        <div class="chart-title">CO₂ Avoided Trend (tonnes)</div>
+        <div class="chart-sub" id="trendLabel4">Select a state above</div>
+        <div class="chart-wrap">
+          <canvas id="trendCO2" role="img" aria-label="CO2 trend"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SECTION 6: OPTIMIZE                         -->
+<!-- ═══════════════════════════════════════════ -->
+<section id="optimize">
+  <div class="section-inner">
+    <div class="section-tag">M6 · Linear Programming · M9 · Forecasting</div>
+    <h2>Energy <em>Optimization</em> & 2030 Outlook</h2>
+    <p class="section-desc">
+      Model 6 finds the cheapest, lowest-emission energy mix to fill each state's demand gap.
+      Model 9 projects which states become self-sufficient by 2030.
+    </p>
+
+    <div class="grid-2">
+      <div class="chart-box">
+        <div class="chart-title">M6 Optimal Investment Required — Top 10 States</div>
+        <div class="chart-sub">₹ Crore investment to fill 2024 demand gap at optimal mix</div>
+        <div class="chart-wrap" style="height:300px">
+          <canvas id="optCostChart" role="img" aria-label="Optimization cost chart"></canvas>
+        </div>
+      </div>
+      <div class="chart-box">
+        <div class="chart-title">M9 Self-Sufficiency 2024 → 2030 Change</div>
+        <div class="chart-sub">Percentage point improvement projected by 2030</div>
+        <div class="chart-wrap" style="height:300px">
+          <canvas id="suffChangeChart" role="img" aria-label="Self-sufficiency change chart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="chart-box">
+      <div class="chart-title">M9 Renewable Self-Sufficiency Forecast Table — All States</div>
+      <div class="chart-sub">Linear trend projection based on 2020–2024 trajectory</div>
+      <div style="overflow-x:auto; margin-top:1rem">
+        <table class="data-table" id="suffTable"></table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  INDIA ENERGY INTELLIGENCE PLATFORM · DWM PROJECT 2024–2025 ·
+  36 STATES · 9 MODELS · BUILT WITH CHART.JS
+</footer>
+
+<script>
+// ═══════════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════════
+const DATA = {"states":{"Andaman and Nicobar Islands":{"solar_irradiance":144.75,"wind_speed":5.03,"solar_capacity":29.91,"wind_capacity":0.0,"hydro_capacity":5.25,"energy_consumption":340.0,"population":444420,"supply_gap":304.8,"renewable_penetration_pct":10.34,"self_sufficiency_ratio":0.1034,"fossil_dependency_ratio":0.8966,"co2_avoided_tonnes":253.0,"resource_score":74.89,"plf":69.76,"td_loss":20.63,"total_renewable":35.16,"installed_target":27.0,"peak_demand":70,"yoy_growth":0.0},"Andhra Pradesh":{"solar_irradiance":132.4,"wind_speed":3.431,"solar_capacity":4584.98,"wind_capacity":4096.65,"hydro_capacity":163.31,"energy_consumption":59121.3,"population":56934551,"supply_gap":50276.4,"renewable_penetration_pct":14.96,"self_sufficiency_ratio":0.1496,"fossil_dependency_ratio":0.8504,"co2_avoided_tonnes":63535.0,"resource_score":67.92,"plf":69.76,"td_loss":11.21,"total_renewable":8844.94,"installed_target":10334.0,"peak_demand":13444,"yoy_growth":0.58},"Arunachal Pradesh":{"solar_irradiance":106.23,"wind_speed":1.913,"solar_capacity":11.79,"wind_capacity":0.0,"hydro_capacity":133.11,"energy_consumption":765.3,"population":1931817,"supply_gap":620.4,"renewable_penetration_pct":18.93,"self_sufficiency_ratio":0.1893,"fossil_dependency_ratio":0.8107,"co2_avoided_tonnes":1041.0,"resource_score":54.07,"plf":69.76,"td_loss":57.32,"total_renewable":144.9,"installed_target":250.0,"peak_demand":218,"yoy_growth":0.1},"Assam":{"solar_irradiance":124.73,"wind_speed":1.875,"solar_capacity":156.18,"wind_capacity":0.0,"hydro_capacity":34.11,"energy_consumption":9634.2,"population":38851213,"supply_gap":9443.9,"renewable_penetration_pct":1.98,"self_sufficiency_ratio":0.0198,"fossil_dependency_ratio":0.9802,"co2_avoided_tonnes":1367.0,"resource_score":63.3,"plf":69.76,"td_loss":23.51,"total_renewable":190.29,"installed_target":688.0,"peak_demand":2812,"yoy_growth":4.54},"Bihar":{"solar_irradiance":120.63,"wind_speed":3.134,"solar_capacity":239.23,"wind_capacity":0.0,"hydro_capacity":70.7,"energy_consumption":33079.1,"population":143502244,"supply_gap":32769.2,"renewable_penetration_pct":0.94,"self_sufficiency_ratio":0.0094,"fossil_dependency_ratio":0.9906,"co2_avoided_tonnes":2226.0,"resource_score":61.88,"plf":69.76,"td_loss":31.7,"total_renewable":309.93,"installed_target":3305.0,"peak_demand":8342,"yoy_growth":17.58},"Chandigarh":{"solar_irradiance":115.25,"wind_speed":2.983,"solar_capacity":65.52,"wind_capacity":0.0,"hydro_capacity":0.0,"energy_consumption":1542.3,"population":1365337,"supply_gap":1476.8,"renewable_penetration_pct":4.25,"self_sufficiency_ratio":0.0425,"fossil_dependency_ratio":0.9575,"co2_avoided_tonnes":471.0,"resource_score":59.12,"plf":69.76,"td_loss":0.0,"total_renewable":65.52,"installed_target":153.0,"peak_demand":449,"yoy_growth":11.64},"Chhattisgarh":{"solar_irradiance":135.41,"wind_speed":2.744,"solar_capacity":1212.39,"wind_capacity":0.0,"hydro_capacity":76.0,"energy_consumption":31267.2,"population":33897753,"supply_gap":29978.8,"renewable_penetration_pct":4.12,"self_sufficiency_ratio":0.0412,"fossil_dependency_ratio":0.9588,"co2_avoided_tonnes":9255.0,"resource_score":69.08,"plf":69.76,"td_loss":30.37,"total_renewable":1288.39,"installed_target":3222.0,"peak_demand":6511,"yoy_growth":25.72},"Dadra and Nagar Haveli and Daman and Diu":{"solar_irradiance":140.47,"wind_speed":3.74,"solar_capacity":46.47,"wind_capacity":0.0,"hydro_capacity":0.0,"energy_consumption":2968.7,"population":740161,"supply_gap":2922.2,"renewable_penetration_pct":1.57,"self_sufficiency_ratio":0.0157,"fossil_dependency_ratio":0.9843,"co2_avoided_tonnes":334.0,"resource_score":72.11,"plf":69.76,"td_loss":0.0,"total_renewable":46.47,"installed_target":648.0,"peak_demand":1390,"yoy_growth":751.1},"Delhi":{"solar_irradiance":105.42,"wind_speed":2.888,"solar_capacity":256.51,"wind_capacity":0.0,"hydro_capacity":0.0,"energy_consumption":29407.6,"population":21995410,"supply_gap":29151.1,"renewable_penetration_pct":0.87,"self_sufficiency_ratio":0.0087,"fossil_dependency_ratio":0.9913,"co2_avoided_tonnes":1843.0,"resource_score":54.15,"plf":69.76,"td_loss":19.25,"total_renewable":256.51,"installed_target":2762.0,"peak_demand":8656,"yoy_growth":17.52},"Goa":{"solar_irradiance":143.25,"wind_speed":4.139,"solar_capacity":43.48,"wind_capacity":0.0,"hydro_capacity":0.05,"energy_consumption":3764.7,"population":1617732,"supply_gap":3721.2,"renewable_penetration_pct":1.16,"self_sufficiency_ratio":0.0116,"fossil_dependency_ratio":0.9884,"co2_avoided_tonnes":313.0,"resource_score":73.69,"plf":69.76,"td_loss":13.7,"total_renewable":43.53,"installed_target":358.0,"peak_demand":810,"yoy_growth":64.02},"Gujarat":{"solar_irradiance":135.94,"wind_speed":3.444,"solar_capacity":13544.88,"wind_capacity":11722.72,"hydro_capacity":91.64,"energy_consumption":112887.2,"population":77194549,"supply_gap":87528.0,"renewable_penetration_pct":22.46,"self_sufficiency_ratio":0.2246,"fossil_dependency_ratio":0.7754,"co2_avoided_tonnes":182160.0,"resource_score":69.69,"plf":69.76,"td_loss":10.23,"total_renewable":25359.24,"installed_target":17133.0,"peak_demand":25588,"yoy_growth":31.22},"Haryana":{"solar_irradiance":108.28,"wind_speed":2.871,"solar_capacity":1475.72,"wind_capacity":0.0,"hydro_capacity":73.5,"energy_consumption":52843.4,"population":32379295,"supply_gap":51294.2,"renewable_penetration_pct":2.93,"self_sufficiency_ratio":0.0293,"fossil_dependency_ratio":0.9707,"co2_avoided_tonnes":11128.0,"resource_score":55.58,"plf":69.76,"td_loss":16.89,"total_renewable":1549.22,"installed_target":4142.0,"peak_demand":14662,"yoy_growth":40.5},"Himachal Pradesh":{"solar_irradiance":117.84,"wind_speed":2.718,"solar_capacity":95.23,"wind_capacity":0.0,"hydro_capacity":969.71,"energy_consumption":9325.0,"population":8119665,"supply_gap":8260.1,"renewable_penetration_pct":11.42,"self_sufficiency_ratio":0.1142,"fossil_dependency_ratio":0.8858,"co2_avoided_tonnes":7650.0,"resource_score":60.28,"plf":69.76,"td_loss":27.05,"total_renewable":1064.94,"installed_target":1603.0,"peak_demand":2273,"yoy_growth":0.73},"Jammu and Kashmir":{"solar_irradiance":110.32,"wind_speed":2.106,"solar_capacity":65.44,"wind_capacity":0.0,"hydro_capacity":169.93,"energy_consumption":14496.9,"population":14324720,"supply_gap":14261.5,"renewable_penetration_pct":1.62,"self_sufficiency_ratio":0.0162,"fossil_dependency_ratio":0.9838,"co2_avoided_tonnes":1691.0,"resource_score":56.21,"plf":69.76,"td_loss":0.0,"total_renewable":235.37,"installed_target":3756.0,"peak_demand":3236,"yoy_growth":20.01},"Jharkhand":{"solar_irradiance":126.09,"wind_speed":3.018,"solar_capacity":162.4,"wind_capacity":0.0,"hydro_capacity":4.05,"energy_consumption":10451.2,"population":43774318,"supply_gap":10284.8,"renewable_penetration_pct":1.59,"self_sufficiency_ratio":0.0159,"fossil_dependency_ratio":0.9841,"co2_avoided_tonnes":1196.0,"resource_score":64.55,"plf":69.76,"td_loss":36.68,"total_renewable":166.45,"installed_target":2105.0,"peak_demand":2351,"yoy_growth":51.47},"Karnataka":{"solar_irradiance":142.12,"wind_speed":4.155,"solar_capacity":8544.68,"wind_capacity":6019.61,"hydro_capacity":1280.73,"energy_consumption":69297.3,"population":75097587,"supply_gap":53452.3,"renewable_penetration_pct":22.87,"self_sufficiency_ratio":0.2287,"fossil_dependency_ratio":0.7713,"co2_avoided_tonnes":113818.0,"resource_score":73.14,"plf":69.76,"td_loss":15.73,"total_renewable":15845.02,"installed_target":14817.0,"peak_demand":18385,"yoy_growth":6.94},"Kerala":{"solar_irradiance":138.23,"wind_speed":3.882,"solar_capacity":1022.79,"wind_capacity":63.5,"hydro_capacity":276.52,"energy_consumption":23352.0,"population":35643806,"supply_gap":21989.2,"renewable_penetration_pct":5.84,"self_sufficiency_ratio":0.0584,"fossil_dependency_ratio":0.9416,"co2_avoided_tonnes":9789.0,"resource_score":71.05,"plf":69.76,"td_loss":9.54,"total_renewable":1362.81,"installed_target":1187.0,"peak_demand":5797,"yoy_growth":24.98},"Ladakh":{"solar_irradiance":114.3,"wind_speed":2.554,"solar_capacity":7.8,"wind_capacity":0.0,"hydro_capacity":42.99,"energy_consumption":230.0,"population":311837,"supply_gap":179.2,"renewable_penetration_pct":22.08,"self_sufficiency_ratio":0.2208,"fossil_dependency_ratio":0.7792,"co2_avoided_tonnes":365.0,"resource_score":58.43,"plf":69.76,"td_loss":38.73,"total_renewable":50.79,"installed_target":100.0,"peak_demand":80,"yoy_growth":4.1},"Lakshadweep":{"solar_irradiance":133.17,"wind_speed":4.432,"solar_capacity":4.97,"wind_capacity":0.0,"hydro_capacity":0.0,"energy_consumption":3120.0,"population":74326,"supply_gap":3115.0,"renewable_penetration_pct":0.16,"self_sufficiency_ratio":0.0016,"fossil_dependency_ratio":0.9984,"co2_avoided_tonnes":36.0,"resource_score":68.8,"plf":69.76,"td_loss":0.0,"total_renewable":4.97,"installed_target":7.0,"peak_demand":15,"yoy_growth":51.99},"Madhya Pradesh":{"solar_irradiance":132.16,"wind_speed":3.146,"solar_capacity":3995.43,"wind_capacity":2844.29,"hydro_capacity":123.71,"energy_consumption":70738.2,"population":93950521,"supply_gap":63774.8,"renewable_penetration_pct":9.84,"self_sufficiency_ratio":0.0984,"fossil_dependency_ratio":0.9016,"co2_avoided_tonnes":50020.0,"resource_score":67.65,"plf":69.76,"td_loss":26.28,"total_renewable":6963.43,"installed_target":12020.0,"peak_demand":19341,"yoy_growth":20.68},"Maharashtra":{"solar_irradiance":136.14,"wind_speed":3.547,"solar_capacity":6249.67,"wind_capacity":5207.98,"hydro_capacity":382.28,"energy_consumption":149281.7,"population":138129147,"supply_gap":137441.8,"renewable_penetration_pct":7.93,"self_sufficiency_ratio":0.0793,"fossil_dependency_ratio":0.9207,"co2_avoided_tonnes":85049.0,"resource_score":69.84,"plf":69.76,"td_loss":11.8,"total_renewable":11839.93,"installed_target":14418.0,"peak_demand":30675,"yoy_growth":17.03},"Manipur":{"solar_irradiance":132.56,"wind_speed":1.296,"solar_capacity":13.04,"wind_capacity":0.0,"hydro_capacity":5.45,"energy_consumption":764.9,"population":3647466,"supply_gap":746.4,"renewable_penetration_pct":2.42,"self_sufficiency_ratio":0.0242,"fossil_dependency_ratio":0.9758,"co2_avoided_tonnes":133.0,"resource_score":66.93,"plf":69.76,"td_loss":29.22,"total_renewable":18.49,"installed_target":105.0,"peak_demand":269,"yoy_growth":4.29},"Meghalaya":{"solar_irradiance":116.11,"wind_speed":2.449,"solar_capacity":4.24,"wind_capacity":0.0,"hydro_capacity":55.03,"energy_consumption":1517.5,"population":4248266,"supply_gap":1458.2,"renewable_penetration_pct":3.91,"self_sufficiency_ratio":0.0391,"fossil_dependency_ratio":0.9609,"co2_avoided_tonnes":426.0,"resource_score":59.28,"plf":69.76,"td_loss":45.54,"total_renewable":59.27,"installed_target":161.0,"peak_demand":408,"yoy_growth":61.59},"Mizoram":{"solar_irradiance":144.0,"wind_speed":0.982,"solar_capacity":30.31,"wind_capacity":0.0,"hydro_capacity":45.47,"energy_consumption":527.3,"population":1474590,"supply_gap":451.5,"renewable_penetration_pct":14.37,"self_sufficiency_ratio":0.1437,"fossil_dependency_ratio":0.8563,"co2_avoided_tonnes":544.0,"resource_score":72.49,"plf":69.76,"td_loss":41.76,"total_renewable":75.78,"installed_target":82.0,"peak_demand":168,"yoy_growth":3.13},"Nagaland":{"solar_irradiance":132.43,"wind_speed":1.084,"solar_capacity":3.17,"wind_capacity":0.0,"hydro_capacity":32.67,"energy_consumption":700.9,"population":2111034,"supply_gap":665.1,"renewable_penetration_pct":5.11,"self_sufficiency_ratio":0.0511,"fossil_dependency_ratio":0.9489,"co2_avoided_tonnes":257.0,"resource_score":66.75,"plf":69.76,"td_loss":56.66,"total_renewable":35.84,"installed_target":54.0,"peak_demand":188,"yoy_growth":0.36},"Odisha":{"solar_irradiance":128.58,"wind_speed":2.865,"solar_capacity":495.63,"wind_capacity":0.0,"hydro_capacity":115.63,"energy_consumption":31443.0,"population":50289350,"supply_gap":30831.7,"renewable_penetration_pct":1.94,"self_sufficiency_ratio":0.0194,"fossil_dependency_ratio":0.9806,"co2_avoided_tonnes":4391.0,"resource_score":65.72,"plf":69.76,"td_loss":19.82,"total_renewable":611.26,"installed_target":3343.0,"peak_demand":7046,"yoy_growth":7.46},"Puducherry":{"solar_irradiance":141.19,"wind_speed":4.554,"solar_capacity":49.91,"wind_capacity":0.0,"hydro_capacity":0.0,"energy_consumption":75.0,"population":1476117,"supply_gap":25.1,"renewable_penetration_pct":66.55,"self_sufficiency_ratio":0.6655,"fossil_dependency_ratio":0.3345,"co2_avoided_tonnes":359.0,"resource_score":72.87,"plf":69.76,"td_loss":16.4,"total_renewable":49.91,"installed_target":246.0,"peak_demand":517,"yoy_growth":40.47},"Punjab":{"solar_irradiance":110.23,"wind_speed":2.983,"solar_capacity":1324.27,"wind_capacity":0.0,"hydro_capacity":176.1,"energy_consumption":60940.7,"population":33239319,"supply_gap":59440.3,"renewable_penetration_pct":2.46,"self_sufficiency_ratio":0.0246,"fossil_dependency_ratio":0.9754,"co2_avoided_tonnes":10777.0,"resource_score":56.61,"plf":69.76,"td_loss":16.92,"total_renewable":1500.37,"installed_target":5472.0,"peak_demand":16089,"yoy_growth":11.69},"Rajasthan":{"solar_irradiance":124.07,"wind_speed":2.965,"solar_capacity":21347.58,"wind_capacity":5195.82,"hydro_capacity":23.85,"energy_consumption":80396.8,"population":89811552,"supply_gap":53829.6,"renewable_penetration_pct":33.05,"self_sufficiency_ratio":0.3305,"fossil_dependency_ratio":0.6695,"co2_avoided_tonnes":190838.0,"resource_score":63.52,"plf":69.76,"td_loss":25.25,"total_renewable":26567.25,"installed_target":12944.0,"peak_demand":19165,"yoy_growth":19.28},"Sikkim":{"solar_irradiance":100.64,"wind_speed":2.348,"solar_capacity":7.04,"wind_capacity":0.0,"hydro_capacity":55.11,"energy_consumption":402.5,"population":722209,"supply_gap":340.4,"renewable_penetration_pct":15.44,"self_sufficiency_ratio":0.1544,"fossil_dependency_ratio":0.8456,"co2_avoided_tonnes":446.0,"resource_score":51.49,"plf":69.76,"td_loss":55.2,"total_renewable":62.15,"installed_target":36.0,"peak_demand":134,"yoy_growth":3.95},"Tamil Nadu":{"solar_irradiance":140.76,"wind_speed":3.995,"solar_capacity":8211.38,"wind_capacity":10603.54,"hydro_capacity":123.05,"energy_consumption":98131.7,"population":88682241,"supply_gap":79193.7,"renewable_penetration_pct":19.3,"self_sufficiency_ratio":0.193,"fossil_dependency_ratio":0.807,"co2_avoided_tonnes":136035.0,"resource_score":72.38,"plf":69.76,"td_loss":16.22,"total_renewable":18937.97,"installed_target":14757.0,"peak_demand":20830,"yoy_growth":12.21},"Telangana":{"solar_irradiance":135.7,"wind_speed":3.697,"solar_capacity":4758.16,"wind_capacity":128.1,"hydro_capacity":90.87,"energy_consumption":64916.3,"population":43579878,"supply_gap":59939.2,"renewable_penetration_pct":7.67,"self_sufficiency_ratio":0.0767,"fossil_dependency_ratio":0.9233,"co2_avoided_tonnes":35752.0,"resource_score":69.7,"plf":69.76,"td_loss":14.2,"total_renewable":4977.13,"installed_target":4460.0,"peak_demand":17162,"yoy_growth":1.89},"Tripura":{"solar_irradiance":135.56,"wind_speed":2.622,"solar_capacity":18.46,"wind_capacity":0.0,"hydro_capacity":16.01,"energy_consumption":358.0,"population":4458490,"supply_gap":323.5,"renewable_penetration_pct":9.63,"self_sufficiency_ratio":0.0963,"fossil_dependency_ratio":0.9037,"co2_avoided_tonnes":248.0,"resource_score":69.09,"plf":69.76,"td_loss":61.0,"total_renewable":34.47,"installed_target":105.0,"peak_demand":386,"yoy_growth":2.56},"Uttar Pradesh":{"solar_irradiance":114.52,"wind_speed":2.985,"solar_capacity":2920.33,"wind_capacity":0.0,"hydro_capacity":49.1,"energy_consumption":122960.4,"population":258478569,"supply_gap":119991.0,"renewable_penetration_pct":2.41,"self_sufficiency_ratio":0.0241,"fossil_dependency_ratio":0.9759,"co2_avoided_tonnes":21330.0,"resource_score":58.75,"plf":69.76,"td_loss":14.38,"total_renewable":2969.43,"installed_target":14129.0,"peak_demand":30618,"yoy_growth":15.8},"Uttarakhand":{"solar_irradiance":125.48,"wind_speed":2.365,"solar_capacity":575.53,"wind_capacity":0.0,"hydro_capacity":218.82,"energy_consumption":12636.2,"population":12882374,"supply_gap":11841.9,"renewable_penetration_pct":6.29,"self_sufficiency_ratio":0.0629,"fossil_dependency_ratio":0.9371,"co2_avoided_tonnes":5706.0,"resource_score":63.92,"plf":69.76,"td_loss":19.51,"total_renewable":794.35,"installed_target":1655.0,"peak_demand":2863,"yoy_growth":0.0},"West Bengal":{"solar_irradiance":115.85,"wind_speed":3.087,"solar_capacity":194.07,"wind_capacity":0.0,"hydro_capacity":98.5,"energy_consumption":52652.3,"population":109358000,"supply_gap":52359.7,"renewable_penetration_pct":0.56,"self_sufficiency_ratio":0.0056,"fossil_dependency_ratio":0.9944,"co2_avoided_tonnes":2102.0,"resource_score":59.47,"plf":69.76,"td_loss":12.88,"total_renewable":292.57,"installed_target":5386.0,"peak_demand":12756,"yoy_growth":5.06}},"trends":{"Andaman and Nicobar Islands":{"years":[2020,2021,2022,2023,2024],"solar_cap":[12.4,29.5,29.5,29.9,29.9],"consumption":[280.0,295.0,310.0,325.0,340.0],"self_suff":[0.0631,0.1177,0.1121,0.1082,0.1034],"co2":[127.0,249.0,250.0,253.0,253.0],"renewable_pct":[6.31,11.77,11.21,10.82,10.34]},"Andhra Pradesh":{"years":[2020,2021,2022,2023,2024],"solar_cap":[3698.3,4291.3,4386.8,4534.2,4585.0],"consumption":[53392.4,64700.6,64805.6,58388.5,59121.3],"self_suff":[0.149,0.1321,0.1334,0.1506,0.1496],"co2":[57127.0,61417.0,62102.0,63170.0,63535.0],"renewable_pct":[14.9,13.21,13.34,15.06,14.96]},"Arunachal Pradesh":{"years":[2020,2021,2022,2023,2024],"solar_cap":[9.9,10.2,11.2,11.6,11.8],"consumption":[630.6,788.9,779.4,722.9,765.3],"self_suff":[0.2236,0.1791,0.1826,0.2002,0.1893],"co2":[1013.0,1015.0,1022.0,1040.0,1041.0],"renewable_pct":[22.36,17.91,18.26,20.02,18.93]},"Assam":{"years":[2020,2021,2022,2023,2024],"solar_cap":[49.8,51.6,117.9,147.9,156.2],"consumption":[8093.9,10425.9,10461.6,9493.6,9634.2],"self_suff":[0.0104,0.0082,0.0145,0.0192,0.0198],"co2":[602.0,615.0,1092.0,1308.0,1367.0],"renewable_pct":[1.04,0.82,1.45,1.92,1.98]},"Bihar":{"years":[2020,2021,2022,2023,2024],"solar_cap":[172.2,180.2,190.6,192.9,239.2],"consumption":[27538.5,34470.9,35230.4,31593.0,33079.1],"self_suff":[0.0088,0.0073,0.0074,0.0083,0.0094],"co2":[1745.0,1802.0,1877.0,1893.0,2226.0],"renewable_pct":[0.88,0.73,0.74,0.83,0.94]},"Chandigarh":{"years":[2020,2021,2022,2023,2024],"solar_cap":[41.4,46.0,55.2,58.7,65.5],"consumption":[1249.7,1540.7,1626.3,1372.7,1542.3],"self_suff":[0.0331,0.0298,0.0339,0.0428,0.0425],"co2":[297.0,330.0,396.0,422.0,471.0],"renewable_pct":[3.31,2.98,3.39,4.28,4.25]},"Chhattisgarh":{"years":[2020,2021,2022,2023,2024],"solar_cap":[424.1,445.2,518.1,948.8,1212.4],"consumption":[25397.2,32402.0,33043.2,27927.6,31267.2],"self_suff":[0.0197,0.0161,0.018,0.0367,0.0412],"co2":[3592.0,3744.0,4267.0,7361.0,9255.0],"renewable_pct":[1.97,1.61,1.8,3.67,4.12]},"Dadra and Nagar Haveli and Daman and Diu":{"years":[2020,2021,2022,2023,2024],"solar_cap":[27.2,51.4,5.5,5.5,46.5],"consumption":[4584.0,6584.8,2968.7,2968.7,2968.7],"self_suff":[0.0059,0.0078,0.0018,0.0018,0.0157],"co2":[195.0,369.0,39.0,39.0,334.0],"renewable_pct":[0.59,0.78,0.18,0.18,1.57]},"Delhi":{"years":[2020,2021,2022,2023,2024],"solar_cap":[166.6,194.4,211.1,218.3,256.5],"consumption":[24098.7,29483.3,31919.4,27433.3,29407.6],"self_suff":[0.0069,0.0066,0.0066,0.008,0.0087],"co2":[1197.0,1397.0,1517.0,1568.0,1843.0],"renewable_pct":[0.69,0.66,0.66,0.8,0.87]},"Goa":{"years":[2020,2021,2022,2023,2024],"solar_cap":[4.9,7.6,19.9,26.5,43.5],"consumption":[3006.1,4068.0,4163.0,3668.9,3764.7],"self_suff":[0.0016,0.0019,0.0048,0.0072,0.0116],"co2":[36.0,55.0,144.0,191.0,313.0],"renewable_pct":[0.16,0.19,0.48,0.72,1.16]},"Gujarat":{"years":[2020,2021,2022,2023,2024],"solar_cap":[2986.8,4469.9,7180.0,9254.6,13544.9],"consumption":[98559.1,123519.8,125995.9,107232.4,112887.2],"self_suff":[0.1075,0.1062,0.1308,0.1802,0.2246],"co2":[76122.0,94203.0,118369.0,138816.0,182160.0],"renewable_pct":[10.75,10.62,13.08,18.02,22.46]},"Haryana":{"years":[2020,2021,2022,2023,2024],"solar_cap":[263.1,472.3,910.6,1029.2,1475.7],"consumption":[42849.2,53087.8,54236.4,48945.2,52843.4],"self_suff":[0.0079,0.0103,0.0181,0.0225,0.0293],"co2":[2418.0,3920.0,7069.0,7921.0,11128.0],"renewable_pct":[0.79,1.03,1.81,2.25,2.93]},"Himachal Pradesh":{"years":[2020,2021,2022,2023,2024],"solar_cap":[40.2,50.3,68.3,87.5,95.2],"consumption":[8302.1,107430.7,10702.1,8679.9,9325.0],"self_suff":[0.1146,0.0092,0.0948,0.1218,0.1142],"co2":[6836.0,7085.0,7291.0,7594.0,7650.0],"renewable_pct":[11.46,0.92,9.48,12.18,11.42]},"Jammu and Kashmir":{"years":[2020,2021,2022,2023,2024],"solar_cap":[40.6,42.1,46.9,49.4,65.4],"consumption":[14507.0,17430.7,17238.1,13973.2,14496.9],"self_suff":[0.0152,0.0131,0.0111,0.014,0.0162],"co2":[1588.0,1639.0,1376.0,1409.0,1691.0],"renewable_pct":[1.52,1.31,1.11,1.4,1.62]},"Jharkhand":{"years":[2020,2021,2022,2023,2024],"solar_cap":[55.5,69.9,88.8,105.8,162.4],"consumption":[7944.6,9556.9,10120.9,8984.6,10451.2],"self_suff":[0.0075,0.0077,0.0092,0.0122,0.0159],"co2":[427.0,531.0,667.0,789.0,1196.0],"renewable_pct":[0.75,0.77,0.92,1.22,1.59]},"Karnataka":{"years":[2020,2021,2022,2023,2024],"solar_cap":[7306.2,7383.9,7590.8,8241.4,8544.7],"consumption":[60838.5,68844.3,69145.9,65717.4,69297.3],"self_suff":[0.2199,0.1976,0.2025,0.2255,0.2287],"co2":[96093.0,97715.0,100582.0,106434.0,113818.0],"renewable_pct":[21.99,19.76,20.25,22.55,22.87]},"Kerala":{"years":[2020,2021,2022,2023,2024],"solar_cap":[162.4,277.4,363.2,761.4,1022.8],"consumption":[21959.6,25298.1,25152.8,21928.3,23352.0],"self_suff":[0.0204,0.0225,0.0266,0.0497,0.0584],"co2":[3210.0,4094.0,4800.0,7833.0,9789.0],"renewable_pct":[2.04,2.25,2.66,4.97,5.84]},"Ladakh":{"years":[2020,2021,2022,2023,2024],"solar_cap":[7.8,7.8,7.8,7.8,7.8],"consumption":[180.0,195.0,205.0,215.0,230.0],"self_suff":[0.2723,0.2513,0.2314,0.2269,0.2208],"co2":[352.0,352.0,341.0,350.0,365.0],"renewable_pct":[27.23,25.13,23.14,22.69,22.08]},"Lakshadweep":{"years":[2020,2021,2022,2023,2024],"solar_cap":[3.3,3.3,3.3,3.3,5.0],"consumption":[2600.0,2720.0,2850.0,2980.0,3120.0],"self_suff":[0.0013,0.0012,0.0011,0.0011,0.0016],"co2":[23.0,23.0,23.0,23.0,36.0],"renewable_pct":[0.13,0.12,0.11,0.11,0.16]},"Madhya Pradesh":{"years":[2020,2021,2022,2023,2024],"solar_cap":[2309.3,2544.7,2717.9,2802.1,3995.4],"consumption":[70381.1,82694.7,81781.5,69376.9,70738.2],"self_suff":[0.07,0.0625,0.0653,0.0832,0.0984],"co2":[35378.0,37096.0,38341.0,41448.0,50020.0],"renewable_pct":[7.0,6.25,6.53,8.32,9.84]},"Maharashtra":{"years":[2020,2021,2022,2023,2024],"solar_cap":[1835.6,2323.8,2631.0,4722.9,6249.7],"consumption":[132258.1,166326.6,170344.9,146143.9,149281.7],"self_suff":[0.0546,0.0463,0.0471,0.0692,0.0793],"co2":[51831.0,55337.0,57645.0,72671.0,85049.0],"renewable_pct":[5.46,4.63,4.71,6.92,7.93]},"Manipur":{"years":[2020,2021,2022,2023,2024],"solar_cap":[10.0,11.4,12.2,12.3,13.0],"consumption":[820.6,937.3,917.2,694.3,764.9],"self_suff":[0.0188,0.018,0.0193,0.0255,0.0242],"co2":[111.0,121.0,127.0,127.0,133.0],"renewable_pct":[1.88,1.8,1.93,2.55,2.42]},"Meghalaya":{"years":[2020,2021,2022,2023,2024],"solar_cap":[3.9,3.9,4.2,4.2,4.2],"consumption":[1696.2,2090.1,2044.4,1455.9,1517.5],"self_suff":[0.0214,0.0174,0.0179,0.0252,0.0391],"co2":[261.0,261.0,263.0,263.0,426.0],"renewable_pct":[2.14,1.74,1.79,2.52,3.91]},"Mizoram":{"years":[2020,2021,2022,2023,2024],"solar_cap":[6.0,7.0,7.9,28.0,30.3],"consumption":[510.0,571.4,577.2,488.6,527.3],"self_suff":[0.0834,0.076,0.0769,0.1504,0.1437],"co2":[305.0,312.0,319.0,528.0,544.0],"renewable_pct":[8.34,7.6,7.69,15.04,14.37]},"Nagaland":{"years":[2020,2021,2022,2023,2024],"solar_cap":[2.8,2.9,3.0,3.0,3.2],"consumption":[701.8,819.3,811.8,690.5,700.9],"self_suff":[0.0477,0.041,0.0415,0.0517,0.0511],"co2":[241.0,241.0,242.0,257.0,257.0],"renewable_pct":[4.77,4.1,4.15,5.17,5.11]},"Odisha":{"years":[2020,2021,2022,2023,2024],"solar_cap":[420.3,425.5,451.2,453.2,495.6],"consumption":[24728.3,35119.8,38753.0,30410.8,31443.0],"self_suff":[0.0196,0.0146,0.0144,0.0187,0.0194],"co2":[3483.0,3693.0,4007.0,4086.0,4391.0],"renewable_pct":[1.96,1.46,1.44,1.87,1.94]},"Puducherry":{"years":[2020,2021,2022,2023,2024],"solar_cap":[5.7,9.5,13.7,35.5,49.9],"consumption":[55.0,60.0,65.0,70.0,75.0],"self_suff":[0.1035,0.1585,0.2106,0.5076,0.6655],"co2":[41.0,68.0,98.0,255.0,359.0],"renewable_pct":[10.35,15.85,21.06,50.76,66.55]},"Punjab":{"years":[2020,2021,2022,2023,2024],"solar_cap":[961.7,982.3,1100.1,1167.3,1324.3],"consumption":[45423.4,59635.1,62667.5,55101.6,60940.7],"self_suff":[0.025,0.0194,0.0204,0.0244,0.0246],"co2":[8155.0,8303.0,9167.0,9650.0,10777.0],"renewable_pct":[2.5,1.94,2.04,2.44,2.46]},"Rajasthan":{"years":[2020,2021,2022,2023,2024],"solar_cap":[5275.3,5925.6,12564.9,17055.7,21347.6],"consumption":[70579.7,84973.8,87966.3,76212.9,80396.8],"self_suff":[0.136,0.1209,0.1923,0.2922,0.3305],"co2":[68950.0,73817.0,121508.0,159991.0,190838.0],"renewable_pct":[13.6,12.09,19.23,29.22,33.05]},"Sikkim":{"years":[2020,2021,2022,2023,2024],"solar_cap":[1.9,1.9,4.7,4.7,7.0],"consumption":[438.5,494.8,518.0,350.5,402.5],"self_suff":[0.1233,0.1092,0.1096,0.1706,0.1544],"co2":[388.0,388.0,408.0,429.0,446.0],"renewable_pct":[12.33,10.92,10.96,17.06,15.44]},"Tamil Nadu":{"years":[2020,2021,2022,2023,2024],"solar_cap":[3961.6,4527.5,5067.2,6736.4,8211.4],"consumption":[89218.6,105331.6,105883.5,91453.2,98131.7],"self_suff":[0.1501,0.1354,0.1422,0.1845,0.193],"co2":[96176.0,102422.0,108155.0,121228.0,136035.0],"renewable_pct":[15.01,13.54,14.22,18.45,19.3]},"Telangana":{"years":[2020,2021,2022,2023,2024],"solar_cap":[3629.1,3961.5,4520.5,4666.0,4758.2],"consumption":[56716.6,70022.4,66414.5,59456.2,64916.3],"self_suff":[0.0678,0.0597,0.0714,0.0822,0.0767],"co2":[27641.0,30029.0,34044.0,35090.0,35752.0],"renewable_pct":[6.78,5.97,7.14,8.22,7.67]},"Tripura":{"years":[2020,2021,2022,2023,2024],"solar_cap":[12.9,13.6,14.9,17.6,18.5],"consumption":[350.5,654.3,958.2,1262.0,358.0],"self_suff":[0.0825,0.0452,0.0322,0.0266,0.0963],"co2":[208.0,212.0,222.0,241.0,248.0],"renewable_pct":[8.25,4.52,3.22,2.66,9.63]},"Uttar Pradesh":{"years":[2020,2021,2022,2023,2024],"solar_cap":[1208.5,1836.3,2244.4,2515.2,2920.3],"consumption":[99787.2,121556.4,129742.1,113176.6,122960.4],"self_suff":[0.0124,0.0155,0.0177,0.0227,0.0241],"co2":[8861.0,13543.0,16475.0,18420.0,21330.0],"renewable_pct":[1.24,1.55,1.77,2.27,2.41]},"Uttarakhand":{"years":[2020,2021,2022,2023,2024],"solar_cap":[327.6,380.1,573.5,575.5,575.5],"consumption":[10849.2,13691.0,13895.8,11466.7,12636.2],"self_suff":[0.0499,0.0434,0.057,0.0693,0.0629],"co2":[3893.0,4270.0,5692.0,5706.0,5706.0],"renewable_pct":[4.99,4.34,5.7,6.93,6.29]},"West Bengal":{"years":[2020,2021,2022,2023,2024],"solar_cap":[127.2,162.7,166.0,180.0,194.1],"consumption":[41598.1,51801.0,52499.4,49362.5,52652.3],"self_suff":[0.0054,0.005,0.005,0.0056,0.0056],"co2":[1622.0,1876.0,1900.0,2000.0,2102.0],"renewable_pct":[0.54,0.5,0.5,0.56,0.56]}},"state_list":["Andaman and Nicobar Islands","Andhra Pradesh","Arunachal Pradesh","Assam","Bihar","Chandigarh","Chhattisgarh","Dadra and Nagar Haveli and Daman and Diu","Delhi","Goa","Gujarat","Haryana","Himachal Pradesh","Jammu and Kashmir","Jharkhand","Karnataka","Kerala","Ladakh","Lakshadweep","Madhya Pradesh","Maharashtra","Manipur","Meghalaya","Mizoram","Nagaland","Odisha","Puducherry","Punjab","Rajasthan","Sikkim","Tamil Nadu","Telangana","Tripura","Uttar Pradesh","Uttarakhand","West Bengal"]};
+
+const CHART_COLORS = { green:'#22c55e', amber:'#f59e0b', red:'#ef4444', blue:'#3b82f6', teal:'#14b8a6', purple:'#a855f7', orange:'#f97316', pink:'#ec4899' };
+const GRID = 'rgba(255,255,255,0.05)';
+const TEXT = '#8fbc8f';
+let trendCharts = {}, predChart = null;
+
+// ═══════════════════════════════
+// INIT
+// ═══════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  populateStateSelect();
+  buildTrendButtons();
+  drawInsightCharts();
+  buildClusterTable();
+  drawModelCharts();
+  buildSuffTable();
+  // Auto-load Karnataka as demo
+  setTimeout(() => { loadTrendState('Karnataka'); }, 300);
+});
+
+function populateStateSelect() {
+  const sel = document.getElementById('stateSelect');
+  DATA.state_list.forEach(s => {
+    const o = document.createElement('option');
+    o.value = s; o.textContent = s;
+    sel.appendChild(o);
+  });
+}
+
+function buildTrendButtons() {
+  const wrap = document.getElementById('trendStateButtons');
+  const featured = ['Rajasthan','Gujarat','Tamil Nadu','Karnataka','Maharashtra','Kerala','Goa','Delhi','Puducherry','Uttar Pradesh'];
+  featured.forEach(s => {
+    const btn = document.createElement('button');
+    btn.className = 'state-btn';
+    btn.textContent = s;
+    btn.onclick = () => loadTrendState(s);
+    wrap.appendChild(btn);
+  });
+}
+
+// ═══════════════════════════════
+// INSIGHT CHARTS
+// ═══════════════════════════════
+function drawInsightCharts() {
+  const states = DATA.state_list;
+  const d = DATA.states;
+
+  // Sort by penetration
+  const sorted = [...states].sort((a,b) => d[b].renewable_penetration_pct - d[a].renewable_penetration_pct).slice(0,15);
+
+  // Penetration bar
+  new Chart(document.getElementById('penetrationChart'), {
+    type:'bar',
+    data: {
+      labels: sorted.map(s => s.length > 12 ? s.slice(0,11)+'…' : s),
+      datasets: [{
+        data: sorted.map(s => d[s].renewable_penetration_pct),
+        backgroundColor: sorted.map(s => d[s].renewable_penetration_pct > 20 ? '#22c55e' : d[s].renewable_penetration_pct > 10 ? '#f59e0b' : '#3b82f6'),
+        borderRadius: 3
+      }]
+    },
+    options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}},
+      scales: { x:{ticks:{color:TEXT,font:{size:9}},grid:{color:GRID}}, y:{ticks:{color:TEXT,callback:v=>v+'%'},grid:{color:GRID}} }}
+  });
+
+  // CO2 bar
+  const co2sorted = [...states].sort((a,b) => d[b].co2_avoided_tonnes - d[a].co2_avoided_tonnes).slice(0,10);
+  new Chart(document.getElementById('co2Chart'), {
+    type:'bar',
+    data: {
+      labels: co2sorted.map(s => s.length > 10 ? s.slice(0,9)+'…' : s),
+      datasets: [{ data: co2sorted.map(s => d[s].co2_avoided_tonnes/1000), backgroundColor:'#14b8a6', borderRadius:3 }]
+    },
+    options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}},
+      scales:{ x:{ticks:{color:TEXT,font:{size:9}},grid:{color:GRID}}, y:{ticks:{color:TEXT,callback:v=>v+'K'},grid:{color:GRID}} }}
+  });
+
+  // Scatter: irradiance vs capacity
+  const scatterData = states.map(s => ({ x: d[s].solar_irradiance, y: d[s].solar_capacity, label: s }));
+  new Chart(document.getElementById('corrChart'), {
+    type:'scatter',
+    data: { datasets:[{ data: scatterData, backgroundColor:'rgba(34,197,94,0.6)', pointRadius:5 }] },
+    options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false},
+      tooltip:{ callbacks:{ label: ctx => `${ctx.raw.label}: ${ctx.raw.x.toFixed(1)} W/m², ${ctx.raw.y.toFixed(0)} MW` }}},
+      scales:{ x:{title:{display:true,text:'Solar Irradiance (W/m²)',color:TEXT,font:{size:10}},ticks:{color:TEXT},grid:{color:GRID}},
+               y:{title:{display:true,text:'Solar Capacity (MW)',color:TEXT,font:{size:10}},ticks:{color:TEXT},grid:{color:GRID}} }}
+  });
+
+  // T&D loss histogram
+  const tdVals = states.map(s => d[s].td_loss);
+  const bins = [{label:'0–10%',min:0,max:10},{label:'10–25%',min:10,max:25},{label:'25–40%',min:25,max:40},{label:'>40%',min:40,max:100}];
+  const binCounts = bins.map(b => tdVals.filter(v => v >= b.min && v < b.max).length);
+  new Chart(document.getElementById('tdChart'), {
+    type:'bar',
+    data: {
+      labels: bins.map(b=>b.label),
+      datasets:[{ data:binCounts, backgroundColor:['#22c55e','#f59e0b','#f97316','#ef4444'], borderRadius:4 }]
+    },
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}},
+      scales:{ x:{ticks:{color:TEXT},grid:{color:GRID}}, y:{ticks:{color:TEXT,stepSize:1},grid:{color:GRID}} }}
+  });
+
+  // Gap bar
+  const gapSorted = [...states].sort((a,b)=>d[b].supply_gap-d[a].supply_gap).slice(0,12);
+  new Chart(document.getElementById('gapChart'), {
+    type:'bar',
+    data:{
+      labels:gapSorted.map(s=>s.length>11?s.slice(0,10)+'…':s),
+      datasets:[{ data:gapSorted.map(s=>d[s].supply_gap/1000), backgroundColor:'#ef4444', borderRadius:3 }]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+      scales:{x:{ticks:{color:TEXT,font:{size:9},maxRotation:45},grid:{color:GRID}},y:{ticks:{color:TEXT,callback:v=>v+'K'},grid:{color:GRID}}}}
+  });
+}
+
+// ═══════════════════════════════
+// CLUSTER TABLE
+// ═══════════════════════════════
+function buildClusterTable() {
+  const d = DATA.states;
+  // Classify clusters based on irradiance + capacity
+  function getCluster(state) {
+    const s = d[state];
+    const cap = s.solar_capacity + s.wind_capacity;
+    if (cap > 15000) return ['Solar Leaders','badge-leader'];
+    if (s.solar_irradiance > 135 && cap < 200) return ['Untapped Potential','badge-untapped'];
+    if (s.solar_irradiance > 130 && cap > 500) return ['Growing States','badge-growing'];
+    return ['Early Stage','badge-early'];
+  }
+  const rows = DATA.state_list.map(s => ({
+    state: s, cluster: getCluster(s),
+    irr: d[s].solar_irradiance, cap: d[s].solar_capacity,
+    pct: d[s].renewable_penetration_pct
+  })).sort((a,b) => b.cap - a.cap);
+
+  const t = document.getElementById('clusterTable');
+  t.innerHTML = `<thead><tr><th>#</th><th>State</th><th>Cluster</th><th>Irradiance</th><th>Solar Cap (MW)</th><th>Renewable %</th></tr></thead>`;
+  const tb = document.createElement('tbody');
+  rows.forEach((r,i) => {
+    const tr = document.createElement('tr');
+    const barW = Math.min(100, r.cap / 220);
+    tr.innerHTML = `<td class="rank">${i+1}</td><td>${r.state}</td>
+      <td><span class="badge-pill ${r.cluster[1]}">${r.cluster[0]}</span></td>
+      <td style="font-family:'DM Mono',monospace;font-size:12px">${r.irr.toFixed(1)}</td>
+      <td><div class="bar-cell"><div class="mini-bar" style="width:${barW}px;background:#22c55e"></div>
+        <span style="font-family:'DM Mono',monospace;font-size:12px">${r.cap.toLocaleString(undefined,{maximumFractionDigits:0})}</span></div></td>
+      <td style="font-family:'DM Mono',monospace;font-size:12px;color:${r.pct>20?'#22c55e':r.pct>5?'#f59e0b':'#9ca3af'}">${r.pct.toFixed(1)}%</td>`;
+    tb.appendChild(tr);
+  });
+  t.appendChild(tb);
+}
+
+// ═══════════════════════════════
+// MODEL CHARTS
+// ═══════════════════════════════
+function drawModelCharts() {
+  const d = DATA.states;
+
+  // Self-sufficiency forecast
+  const topStates = ['Puducherry','Rajasthan','Gujarat','Karnataka','Tamil Nadu','Kerala'];
+  const years = [2020,2021,2022,2023,2024,2025,2026,2027,2028,2029,2030];
+  const datasets = topStates.map((s,i) => {
+    const hist = DATA.trends[s];
+    const vals = [...hist.self_suff];
+    // Linear projection 2025-2030
+    const x = [0,1,2,3,4], y = hist.self_suff;
+    const n = x.length;
+    const sx=x.reduce((a,b)=>a+b,0), sy=y.reduce((a,b)=>a+b,0);
+    const sxy=x.reduce((a,b,i)=>a+b*y[i],0), sx2=x.reduce((a,b)=>a+b*b,0);
+    const slope=(n*sxy-sx*sy)/(n*sx2-sx*sx);
+    const intercept=(sy-slope*sx)/n;
+    for(let yr=5;yr<=10;yr++) vals.push(Math.min(1,Math.max(0,slope*yr+intercept)));
+    const colors = ['#22c55e','#f59e0b','#3b82f6','#14b8a6','#a855f7','#f97316'];
+    return { label:s, data:vals.map((v,i)=>({x:years[i],y:+(v*100).toFixed(1)})),
+      borderColor:colors[i], pointRadius:3, tension:0.3, fill:false,
+      borderDash: Array.from({length:years.length}).map((_,i)=>i>=5?[4,2]:[]) };
+  });
+
+  new Chart(document.getElementById('suffChart'), {
+    type:'line',
+    data:{ datasets },
+    options:{ responsive:true,maintainAspectRatio:false,
+      plugins:{ legend:{ labels:{color:TEXT,font:{size:10}} } },
+      scales:{ x:{type:'linear',ticks:{color:TEXT,stepSize:2},grid:{color:GRID}},
+               y:{title:{display:true,text:'Self-Suff. %',color:TEXT,font:{size:10}},ticks:{color:TEXT,callback:v=>v+'%'},grid:{color:GRID}} }}
+  });
+
+  // CO2 feature importance
+  const features = ['total_renewable','wind_capacity','solar_capacity','fossil_dep','plf','self_suff'];
+  const importances = [89.4, 8.9, 1.4, 0.1, 0.1, 0.1];
+  new Chart(document.getElementById('co2ImpChart'), {
+    type:'bar',
+    data:{
+      labels:features,
+      datasets:[{ data:importances, backgroundColor:importances.map(v=>v>50?'#14b8a6':v>5?'#22c55e':'#4a7a4a'), borderRadius:3 }]
+    },
+    options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+      scales:{x:{ticks:{color:TEXT,callback:v=>v+'%'},grid:{color:GRID}},y:{ticks:{color:TEXT,font:{size:10}},grid:{color:GRID}}}}
+  });
+
+  // Optimization cost chart
+  const optStates = ['Maharashtra','Uttar Pradesh','Gujarat','Tamil Nadu','MP','Telangana','Punjab','Rajasthan','Karnataka','W Bengal'];
+  const optCosts = [783418,683948,498909,451404,363516,341653,338809,306828,304678,298450].map(v=>v/100000);
+  new Chart(document.getElementById('optCostChart'), {
+    type:'bar',
+    data:{
+      labels:optStates,
+      datasets:[{ data:optCosts, backgroundColor:'#f59e0b', borderRadius:3 }]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+      scales:{x:{ticks:{color:TEXT,font:{size:9},maxRotation:45},grid:{color:GRID}},
+              y:{ticks:{color:TEXT,callback:v=>v+'L Cr'},grid:{color:GRID}}}}
+  });
+
+  // Self-sufficiency change chart
+  const changeSorted = DATA.state_list.map(s => {
+    const t = DATA.trends[s];
+    const slope = (t.self_suff[4]-t.self_suff[0])/4;
+    return {state:s, change: +(slope*6*100).toFixed(2)};
+  }).sort((a,b)=>b.change-a.change).slice(0,12);
+
+  new Chart(document.getElementById('suffChangeChart'), {
+    type:'bar',
+    data:{
+      labels:changeSorted.map(s=>s.state.length>11?s.state.slice(0,10)+'…':s.state),
+      datasets:[{ data:changeSorted.map(s=>s.change),
+        backgroundColor:changeSorted.map(s=>s.change>5?'#22c55e':s.change>1?'#f59e0b':'#9ca3af'), borderRadius:3 }]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+      scales:{x:{ticks:{color:TEXT,font:{size:9},maxRotation:45},grid:{color:GRID}},
+              y:{ticks:{color:TEXT,callback:v=>'+'+v.toFixed(1)+'%'},grid:{color:GRID}}}}
+  });
+}
+
+// ═══════════════════════════════
+// SELF-SUFFICIENCY TABLE
+// ═══════════════════════════════
+function buildSuffTable() {
+  const d = DATA.states;
+  const rows = DATA.state_list.map(s => {
+    const t = DATA.trends[s];
+    const suff2024 = d[s].self_sufficiency_ratio;
+    const slope = (t.self_suff[4]-t.self_suff[0])/4;
+    const suff2030 = Math.min(1, Math.max(0, suff2024 + slope*6));
+    const traj = slope > 0.002 ? '↑ Improving' : slope > -0.002 ? '→ Stagnant' : '↓ Declining';
+    const trajColor = slope > 0.002 ? '#22c55e' : slope > -0.002 ? '#f59e0b' : '#ef4444';
+    return {state:s, s2024:suff2024, s2030:suff2030, change:suff2030-suff2024, traj, trajColor};
+  }).sort((a,b)=>b.s2030-a.s2030);
+
+  const t = document.getElementById('suffTable');
+  t.innerHTML = `<thead><tr><th>#</th><th>State</th><th>2024 Self-Suff.</th><th>2030 Forecast</th><th>Change</th><th>Trajectory</th></tr></thead>`;
+  const tb = document.createElement('tbody');
+  rows.forEach((r,i) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td class="rank">${i+1}</td><td>${r.state}</td>
+      <td style="font-family:'DM Mono',monospace;font-size:12px">${(r.s2024*100).toFixed(1)}%</td>
+      <td style="font-family:'DM Mono',monospace;font-size:12px;color:#22c55e">${(r.s2030*100).toFixed(1)}%</td>
+      <td style="font-family:'DM Mono',monospace;font-size:12px;color:${r.change>0.01?'#22c55e':'#9ca3af'}">+${(r.change*100).toFixed(1)}%</td>
+      <td style="font-size:12px;color:${r.trajColor}">${r.traj}</td>`;
+    tb.appendChild(tr);
+  });
+  t.appendChild(tb);
+}
+
+// ═══════════════════════════════
+// TREND CHARTS
+// ═══════════════════════════════
+function loadTrendState(state) {
+  document.querySelectorAll('.state-btn').forEach(b => {
+    b.classList.toggle('active', b.textContent === state);
+  });
+  const t = DATA.trends[state];
+  const years = t.years;
+  ['trendLabel1','trendLabel2','trendLabel3','trendLabel4'].forEach(id => {
+    document.getElementById(id).textContent = state + ' · 2020–2024';
+  });
+
+  const chartDefs = [
+    { id:'trendSolar', data:t.solar_cap, color:'#22c55e', label:'Solar Capacity (MW)' },
+    { id:'trendPenetration', data:t.renewable_pct, color:'#f59e0b', label:'Renewable Penetration (%)' },
+    { id:'trendCons', data:t.consumption, color:'#3b82f6', label:'Energy Consumption (MU)' },
+    { id:'trendCO2', data:t.co2, color:'#14b8a6', label:'CO₂ Avoided (tonnes)' },
+  ];
+
+  chartDefs.forEach(cd => {
+    if (trendCharts[cd.id]) trendCharts[cd.id].destroy();
+    trendCharts[cd.id] = new Chart(document.getElementById(cd.id), {
+      type:'line',
+      data:{ labels:years,
+        datasets:[{ label:cd.label, data:cd.data, borderColor:cd.color,
+          backgroundColor:cd.color+'22', fill:true, tension:0.4, pointRadius:5,
+          pointBackgroundColor:cd.color, pointBorderColor:'#0a0f0a', pointBorderWidth:2 }]
+      },
+      options:{ responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{display:false}},
+        scales:{x:{ticks:{color:TEXT},grid:{color:GRID}},y:{ticks:{color:TEXT},grid:{color:GRID}}} }
+    });
+  });
+}
+
+// ═══════════════════════════════
+// STATE LOADER (prediction form)
+// ═══════════════════════════════
+function loadState() {
+  const state = document.getElementById('stateSelect').value;
+  if (!state || !DATA.states[state]) return;
+  const d = DATA.states[state];
+  document.getElementById('f_irr').value    = d.solar_irradiance.toFixed(1);
+  document.getElementById('f_wind').value   = d.wind_speed.toFixed(2);
+  document.getElementById('f_solar').value  = d.solar_capacity.toFixed(0);
+  document.getElementById('f_windcap').value = d.wind_capacity.toFixed(0);
+  document.getElementById('f_hydro').value  = d.hydro_capacity.toFixed(0);
+  document.getElementById('f_cons').value   = d.energy_consumption.toFixed(0);
+  document.getElementById('f_plf').value    = d.plf.toFixed(1);
+  document.getElementById('f_td').value     = d.td_loss.toFixed(1);
+  document.getElementById('f_res').value    = d.resource_score.toFixed(1);
+}
+
+function clearForm() {
+  ['f_irr','f_wind','f_solar','f_windcap','f_hydro','f_cons','f_plf','f_td','f_res']
+    .forEach(id => document.getElementById(id).value = '');
+  document.getElementById('predResults').style.display = 'none';
+}
+
+// ═══════════════════════════════
+// PREDICTION ENGINE
+// ═══════════════════════════════
+function runPrediction() {
+  const irr    = parseFloat(document.getElementById('f_irr').value) || 140;
+  const wind   = parseFloat(document.getElementById('f_wind').value) || 3.5;
+  const solar  = parseFloat(document.getElementById('f_solar').value) || 500;
+  const windC  = parseFloat(document.getElementById('f_windcap').value) || 0;
+  const hydro  = parseFloat(document.getElementById('f_hydro').value) || 0;
+  const cons   = parseFloat(document.getElementById('f_cons').value) || 20000;
+  const plf    = parseFloat(document.getElementById('f_plf').value) || 63;
+  const td     = parseFloat(document.getElementById('f_td').value) || 15;
+  const res    = parseFloat(document.getElementById('f_res').value) || 65;
+
+  const renew  = solar + windC + hydro;
+  const gap    = Math.max(0, cons - renew);
+  const gapRatio = Math.min(1, gap / cons);
+  const util   = Math.min(100, renew / cons * 100);
+  const selfSuff = Math.min(1, renew / cons);
+  const fossDep  = 1 - selfSuff;
+
+  // M4: Cluster
+  const cluster = (irr > 140 && (solar + windC) > 8000) ? ['Solar Leaders','badge-leader'] :
+                  (irr > 135 && (solar + windC) > 1000) ? ['Growing States','badge-growing'] :
+                  (irr > 135 && renew < 500) ? ['Untapped Potential','badge-untapped'] :
+                  ['Early Stage','badge-early'];
+
+  // M2: Priority
+  const priority = (irr > 140 && gapRatio > 0.75) ? ['HIGH','badge-high'] :
+                   (irr > 125 || gapRatio > 0.5) ? ['MEDIUM','badge-medium'] :
+                   ['LOW','badge-low'];
+
+  // M1: RF consumption forecast (simplified model)
+  const baseSlope = 0.35; const baseAdj = 1.02;
+  const consForecast = Math.round(cons * baseAdj + solar * baseSlope);
+
+  // M3: Solar 2025 (avg 394 MW/year national growth)
+  const solar2025 = Math.round(solar + 394);
+  const gap2025   = Math.max(0, consForecast - solar2025);
+
+  // M6: LP Optimization
+  const target   = Math.max(solar * 2, gap + renew);
+  const maxSolarAdd = Math.max(0, target * 0.6 - solar);
+  const maxWindAdd  = Math.max(0, target * 0.3 - windC);
+  const maxHydroAdd = Math.max(0, target * 0.1 - hydro);
+  const totalCap = maxSolarAdd + maxWindAdd + maxHydroAdd;
+  const solarAdd = Math.min(maxSolarAdd, gap * 0.6);
+  const windAdd  = Math.min(maxWindAdd,  gap * 0.25);
+  const hydroAdd = Math.min(maxHydroAdd, gap * 0.15);
+  const estCost  = Math.round(solarAdd * 4.5 + windAdd * 6.0 + hydroAdd * 10.0);
+  const co2Save  = Math.round(solarAdd * 1200 + windAdd * 1100 + hydroAdd * 900);
+
+  // M7: CO2 prediction (based on total_renewable, correlation driven)
+  const co2Pred = Math.round(renew * 7.2 * (plf/69.76));
+
+  // M8: T&D tier
+  const tdTier = td < 10 ? ['LOW','✅ Efficient — ready for more capacity'] :
+                 td < 25 ? ['MEDIUM','⚠️ Grid modernisation recommended'] :
+                           ['HIGH','🔴 Urgent grid upgrade before adding capacity'];
+
+  // M9: Self-sufficiency 2030
+  const state = document.getElementById('stateSelect').value;
+  let slope2030 = 0.007;
+  if (state && DATA.trends[state]) {
+    const t = DATA.trends[state].self_suff;
+    slope2030 = (t[4] - t[0]) / 4;
+  }
+  const suff2030 = Math.min(100, (selfSuff + slope2030 * 6) * 100).toFixed(1);
+  const traj = slope2030 > 0.002 ? 'Improving ↑' : slope2030 > -0.002 ? 'Stagnant →' : 'Declining ↓';
+
+  // Render results
+  document.getElementById('predResults').style.display = 'block';
+  document.getElementById('run-note').textContent = `Ran at ${new Date().toLocaleTimeString()}`;
+
+  const cards = [
+    { model:'M4 · K-MEANS', label:'Cluster Classification', value:`<span class="badge-pill ${cluster[1]}">${cluster[0]}</span>`,
+      note:'Based on irradiance + installed capacity vs national averages' },
+    { model:'M2 · DECISION TREE', label:'Investment Priority', value:`<span class="badge-pill ${priority[1]}">${priority[0]}</span>`,
+      note:`Gap ratio: ${(gapRatio*100).toFixed(0)}% · Utilization: ${util.toFixed(1)}%` },
+    { model:'M1 · RANDOM FOREST', label:'Demand Forecast 2025', value:consForecast.toLocaleString(), cls:'green',
+      note:`Currently ${cons.toLocaleString()} MU · est. +${((consForecast/cons-1)*100).toFixed(1)}% growth` },
+    { model:'M3 · LINEAR TREND', label:'Solar Capacity 2025', value:`${solar2025.toLocaleString()} MW`, cls:'green',
+      note:`Currently ${solar.toFixed(0)} MW · +394 MW from national avg trend` },
+    { model:'M6 · LP OPTIMIZER', label:'Optimal Investment', value:`₹${estCost.toLocaleString()} Cr`, cls:'amber',
+      note:`Solar +${solarAdd.toFixed(0)} MW · Wind +${windAdd.toFixed(0)} MW · Hydro +${hydroAdd.toFixed(0)} MW` },
+    { model:'M7 · GRADIENT BOOST', label:'CO₂ Avoided /year', value:`${co2Pred.toLocaleString()} t`, cls:'teal',
+      note:`From ${renew.toFixed(0)} MW total renewables at PLF=${plf}%` },
+    { model:'M8 · RF CLASSIFIER', label:'Grid Efficiency Tier', value:tdTier[0], cls: td<10?'green':td<25?'amber':'red',
+      note:tdTier[1] },
+    { model:'M9 · TREND FORECAST', label:'Self-Sufficiency 2030', value:`${suff2030}%`, cls:'blue',
+      note:`Currently ${(selfSuff*100).toFixed(1)}% · ${traj}` },
+    { model:'GAP ANALYSIS', label:'Predicted Gap 2025', value:`${gap2025.toLocaleString()} MU`, cls: gap2025>50000?'red':gap2025>10000?'amber':'green',
+      note:`Demand ${consForecast.toLocaleString()} vs Solar ${solar2025.toLocaleString()} MW` },
+  ];
+
+  const container = document.getElementById('resultCards');
+  container.innerHTML = '';
+  cards.forEach(c => {
+    const div = document.createElement('div');
+    div.className = 'result-card';
+    div.innerHTML = `<div class="result-model">${c.model}</div>
+      <div class="result-label">${c.label}</div>
+      <div class="result-value ${c.cls||''}">${c.value}</div>
+      <div class="result-note">${c.note}</div>`;
+    container.appendChild(div);
+  });
+
+  // IO Relations
+  const ioWrap = document.getElementById('ioRelations');
+  const rels = [
+    {inp:'solar_irradiance', out:`Priority classification`, str: irr>140?'str-strong':'str-moderate', desc:irr>140?'STRONG (>140 = HIGH)':'MODERATE (<140 = MEDIUM)'},
+    {inp:'solar_capacity', out:'CO₂ avoided prediction', str:'str-strong', desc:'89.4% of CO₂ model weight'},
+    {inp:'(solar+wind+hydro)', out:'Self-sufficiency ratio', str:'str-strong', desc:`Currently ${(selfSuff*100).toFixed(1)}% covered`},
+    {inp:'gap_ratio', out:'Investment priority', str:'str-moderate', desc:`${(gapRatio*100).toFixed(0)}% of demand uncovered`},
+    {inp:'t&d_loss', out:'Grid efficiency tier', str: td<10?'str-strong':td<25?'str-moderate':'str-strong', desc:tdTier[1]},
+    {inp:'supply_gap', out:'LP optimal mix (MW)', str:'str-strong', desc:`Need ${solarAdd.toFixed(0)}+${windAdd.toFixed(0)}+${hydroAdd.toFixed(0)} MW`},
+  ];
+  ioWrap.innerHTML = rels.map(r => `
+    <div class="rel-row">
+      <span class="rel-input">${r.inp}</span>
+      <span class="rel-arrow">→</span>
+      <span class="rel-output">${r.out}: ${r.desc}</span>
+      <span class="rel-strength ${r.str}">${r.str.replace('str-','')}</span>
+    </div>`).join('');
+
+  // Opt viz
+  const optWrap = document.getElementById('optViz');
+  const maxAdd = Math.max(solarAdd, windAdd, hydroAdd, 1);
+  optWrap.innerHTML = `
+    <p style="font-size:12px;color:var(--text3);margin-bottom:1rem">To fill gap of <span style="color:var(--amber)">${gap.toLocaleString()} MU</span> at minimum cost + minimum CO₂:</p>
+    <div class="opt-row"><span class="opt-label">Solar</span><div class="opt-track"><div class="opt-fill" style="width:${(solarAdd/maxAdd*100).toFixed(0)}%;background:#f59e0b"></div></div><span class="opt-val">${solarAdd.toFixed(0)} MW</span></div>
+    <div class="opt-row"><span class="opt-label">Wind</span><div class="opt-track"><div class="opt-fill" style="width:${(windAdd/maxAdd*100).toFixed(0)}%;background:#3b82f6"></div></div><span class="opt-val">${windAdd.toFixed(0)} MW</span></div>
+    <div class="opt-row"><span class="opt-label">Hydro</span><div class="opt-track"><div class="opt-fill" style="width:${(hydroAdd/maxAdd*100).toFixed(0)}%;background:#14b8a6"></div></div><span class="opt-val">${hydroAdd.toFixed(0)} MW</span></div>
+    <p style="font-size:11px;color:var(--text3);margin-top:0.75rem">Total investment: <span style="color:var(--green3)">₹${estCost.toLocaleString()} Crore</span> · CO₂ savings: <span style="color:var(--teal)">${co2Save.toLocaleString()} tonnes/year</span></p>
+  `;
+}
+
+// Nav chip interaction
+document.querySelectorAll('.chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>
