@@ -34,13 +34,21 @@ warnings.filterwarnings('ignore')
 # ─────────────────────────────────────────────
 # LOAD DATA
 # ─────────────────────────────────────────────
-# df_all = pd.read_excel('enriched_data.xlsx')
-def load_data():
-    import pandas as pd
-    return pd.read_excel('enriched_data.xlsx')
-df_24  = df_all[df_all['year'] == 2024].copy().reset_index(drop=True)
-df_23  = df_all[df_all['year'] == 2023].copy().reset_index(drop=True)
+# # df_all = pd.read_excel('enriched_data.xlsx')
+# def load_data():
+#     import pandas as pd
+#     return pd.read_excel('enriched_data.xlsx')
+# df_24  = df_all[df_all['year'] == 2024].copy().reset_index(drop=True)
+# df_23  = df_all[df_all['year'] == 2023].copy().reset_index(drop=True)
+import pandas as pd
 
+def load_data():
+    return pd.read_excel('enriched_data.xlsx')
+
+def get_2024_data():
+    df_all = load_data()
+    df_24 = df_all[df_all['year'] == 2024].copy().reset_index(drop=True)
+    return df_24
 print("=" * 70)
 print("ADVANCED MODELS — Enriched Dataset")
 print("=" * 70)
