@@ -1,8 +1,9 @@
-import streamlit as st
-from models_6_to_9 import *
+# import streamlit as st
+# from models_6_to_9 import *
 
 import streamlit as st
 from models_6_to_9 import get_2024_data
+
 
 st.title("🌱 Renewable Energy Platform")
 
