@@ -564,7 +564,7 @@ if __name__ == "__main__":
         solar_capacity, wind_capacity=0, hydro_capacity=0,
         energy_consumption=None, population=None,
         plf=63.0, td_loss_pct=15.0, resource_score=65.0,
-        installed_target_mw=None, year=2025
+        installed_target_mw=None, year=2028
     ):
         """
         Run ALL 9 models on any state's input data.
