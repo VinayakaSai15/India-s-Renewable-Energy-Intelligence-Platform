@@ -4,7 +4,27 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>India Renewable Energy Intelligence Platform</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js">
+  async function runPrediction() {
+    const data = {
+        demand: 100,
+        solar: 50
+    };
+
+    const response = await fetch("/api/predict", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    });
+
+    const result = await response.json();
+
+    console.log(result);
+    alert("Prediction: " + result.prediction);
+}
+</script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap');
 
@@ -579,6 +599,7 @@
 <!-- ═══════════════════════════════════════════ -->
 <!-- SECTION 1: INTRO / HERO                     -->
 <!-- ═══════════════════════════════════════════ -->
+ <button onclick="runPrediction()">Run Prediction</button>
 <section id="intro">
   <div class="hero-grid"></div>
   <div class="hero-content">
