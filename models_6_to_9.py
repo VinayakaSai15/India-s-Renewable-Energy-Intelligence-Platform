@@ -510,10 +510,19 @@ if __name__ == "__main__":
     print(suff_df['trajectory'].value_counts())
 
     # Chart 9: Trajectory lines for top 8 most interesting states
-    interesting = pd.concat([
-        suff_df.nlargest(4, 'ratio_2030'),
-        suff_df[suff_df['trajectory']=='Improving'].nlargest(4, 'annual_improvement')
-    ]).drop_duplicates(subset='state').head(8)
+    # Pick 8 distinct states across 3 groups: top 2030 ratio + fastest improvers + most needing help
+    group1 = suff_df.nlargest(3, 'ratio_2030')['state'].tolist()
+    group2 = suff_df[suff_df['trajectory']=='Improving'].nlargest(3, 'annual_improvement')['state'].tolist()
+    group3 = suff_df[suff_df['trajectory'].isin(['Stagnant','Improving'])].nlargest(4, 'ratio_2030')['state'].tolist()
+    seen, ordered = set(), []
+    for s in group1 + group2 + group3:
+        if s not in seen and len(ordered) < 8:
+            seen.add(s); ordered.append(s)
+    # Fill remaining with any not yet selected
+    for s in suff_df['state'].tolist():
+        if s not in seen and len(ordered) < 8:
+            seen.add(s); ordered.append(s)
+    interesting = suff_df[suff_df['state'].isin(ordered)].set_index('state').loc[ordered].reset_index()
 
     fig, axes = plt.subplots(2, 4, figsize=(16, 8))
     axes = axes.flatten()
@@ -564,7 +573,7 @@ if __name__ == "__main__":
         solar_capacity, wind_capacity=0, hydro_capacity=0,
         energy_consumption=None, population=None,
         plf=63.0, td_loss_pct=15.0, resource_score=65.0,
-        installed_target_mw=None, year=2028
+        installed_target_mw=None, year=2027
     ):
         """
         Run ALL 9 models on any state's input data.
@@ -702,14 +711,14 @@ if __name__ == "__main__":
                 solar_capacity=43.48, wind_capacity=0, hydro_capacity=0.05,
                 energy_consumption=3720, population=1500000,
                 plf=69.8, td_loss_pct=13.7, resource_score=73.7,
-                installed_target_mw=358, year=2025)
+                installed_target_mw=358, year=2027)
 
     print("\n📍 DEMO: RAJASTHAN")
     full_predict("Rajasthan", solar_irradiance=127.8, wind_speed=3.09,
                 solar_capacity=21347.58, wind_capacity=5193.42, hydro_capacity=23.85,
                 energy_consumption=76212.9, population=80000000,
                 plf=69.8, td_loss_pct=18.0, resource_score=72.0,
-                installed_target_mw=40000, year=2025)
+                installed_target_mw=40000, year=2027)
 
 
 
